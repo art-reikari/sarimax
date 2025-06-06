@@ -58,17 +58,18 @@ class SARIMAXModel:
         self.insample_prediction_df = pd.DataFrame()
 
     @staticmethod
-    def plot_time_series_differences(endog: pd.Series) -> None:
+    def plot_time_series(endog: pd.Series, diff_count: int = 1) -> None:
         """
-        Plots time series graph together with its difference and difference of difference
-        to visually analyse if differencing is required.
+        Plots time series graph together with its differences to visually analyse if differencing is required.
         :param endog: time series data
+        :param diff_count: number of differences of the original time series data to be plotted
         :return: None
         """
-        fig, axes = plt.subplots(1, 3)
+        fig, axes = plt.subplots(1, 1 + diff_count)
         endog.plot(ax=axes[0], title='Original series')
-        endog.diff().plot(ax=axes[1], title='First difference')
-        endog.diff().diff().plot(ax=axes[2], title='Second difference')
+        for i in range(0, diff_count):
+            endog = endog.diff()
+            endog.plot(ax=axes[i+1], title=f'{i+1}th difference')
         plt.show()
 
     @staticmethod
